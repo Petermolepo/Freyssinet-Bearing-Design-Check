@@ -1,0 +1,20 @@
+{
+  "_comment": "Verification sample from Naidu Consulting brief. Expected: BEARING FAILS (Checks 1, 2, 5 fail).",
+  "l":          457,
+  "b":          254,
+  "T":          54,
+  "plate_thk":  4.5,
+  "no_plates":  4,
+  "te":         10,
+  "ti":         10,
+  "G":          0.9,
+  "Vmax":       1420,
+  "Vdl":        384,
+  "Vll":        1036,
+  "Hs":         50,
+  "Ht":         10,
+  "long_mvmt":  10.6,
+  "trans_mvmt": 4.19,
+  "alpha_b":    0.0001,
+  "alpha_l":    0
+}

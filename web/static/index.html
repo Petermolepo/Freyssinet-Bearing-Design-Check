@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Freyssinet elastomeric bridge bearing design check — 7 checks per Naidu Consulting assessment" />
+  <title>Freyssinet Bearing Design Check | Naidu Consulting</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/styles.css" />
+</head>
+<body>
+<div class="page-bg" aria-hidden="true"></div>
+<div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="header-top">
+    <div class="header-inner">
+      <div class="brand">
+        <a href="/" class="logo-link" title="Naidu Consulting">
+          <img
+            src="/static/img/naidu-logo.jpg"
+            alt="Naidu Consulting logo"
+            class="logo-img"
+            width="64"
+            height="64"
+          />
+        </a>
+        <div class="brand-text">
+          <span class="brand-org">Naidu Consulting</span>
+          <h1>Freyssinet Bearing Design Check</h1>
+          <p class="brand-tagline">Elastomeric bridge bearing · 7-check Freyssinet assessment tool</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="btn-header" onclick="loadSample()" title="Run verification sample">
+          <span class="btn-header-icon">⚡</span> Quick verify
+        </button>
+        <button type="button" class="btn-header primary" onclick="runChecks()" title="Ctrl+Enter">
+          <span class="btn-header-icon">▶</span> Run checks
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="header-bar">
+    <div class="header-inner header-bar-inner">
+      <div class="header-stats">
+        <div class="stat-pill"><span class="stat-num">7</span><span class="stat-label">Design checks</span></div>
+        <div class="stat-pill"><span class="stat-num">17</span><span class="stat-label">Input parameters</span></div>
+        <div class="stat-pill accent"><span class="stat-num">✓</span><span class="stat-label">Spreadsheet verified</span></div>
+      </div>
+      <div class="header-meta">
+        <span class="badge"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> run</span>
+        <span class="badge" id="api-status">● Ready</span>
+        <span class="badge badge-version">v1.0</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="intro-strip">
+  <div class="intro-card">
+    <p>
+      Implements all <strong>7 Freyssinet checks</strong> from the provided spreadsheet
+      (<em>NC-DE-ESD_Test_ElastomericBearingDesign.xlsx</em>). Results match the
+      <strong>verification sample</strong> in the candidate brief — use <em>Load Sample</em> to confirm.
+    </p>
+    <div class="workflow" aria-label="Workflow">
+      <span class="active">1 · Input</span>
+      <span>2 · Run</span>
+      <span>3 · Review</span>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+  <div class="layout">
+
+    <section aria-labelledby="input-heading">
+      <div class="card">
+        <div class="card-header">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          <h2 id="input-heading">Bearing input parameters</h2>
+        </div>
+        <div class="card-body">
+
+          <nav class="tabs" role="tablist">
+            <button type="button" class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab('manual')">Manual entry</button>
+            <button type="button" class="tab-btn" role="tab" onclick="switchTab('sample')">Verification sample</button>
+            <button type="button" class="tab-btn" role="tab" onclick="switchTab('json')">Paste JSON</button>
+          </nav>
+
+          <div id="tab-manual" class="tab-panel active" role="tabpanel">
+            <p class="form-section-title">Bearing type</p>
+            <div class="field">
+              <label for="bearing_type">Type</label>
+              <select id="bearing_type">
+                <option value="pad">Plain elastomeric pad (verified)</option>
+                <option value="laminated">Laminated bearing (stub)</option>
+                <option value="pot">Pot bearing (stub)</option>
+              </select>
+            </div>
+
+            <p class="form-section-title">Plan dimensions</p>
+            <div class="form-grid cols-3">
+              <div class="field"><label for="l">Length l <span>mm</span></label><input type="number" id="l" placeholder="457" step="any" /></div>
+              <div class="field"><label for="b">Width b <span>mm</span></label><input type="number" id="b" placeholder="254" step="any" /></div>
+              <div class="field"><label for="T">Height T <span>mm</span></label><input type="number" id="T" placeholder="54" step="any" /></div>
+            </div>
+
+            <p class="form-section-title">Plate &amp; rubber geometry</p>
+            <div class="form-grid">
+              <div class="field"><label for="plate_thk">Plate thickness <span>mm</span></label><input type="number" id="plate_thk" placeholder="4.5" step="any" /></div>
+              <div class="field"><label for="no_plates">No. of plates <span>—</span></label><input type="number" id="no_plates" placeholder="4" step="1" min="2" /></div>
+              <div class="field"><label for="te">te (edge rubber) <span>mm</span></label><input type="number" id="te" placeholder="10" step="any" /></div>
+              <div class="field"><label for="ti">ti (internal rubber) <span>mm</span></label><input type="number" id="ti" placeholder="10" step="any" /></div>
+            </div>
+            <p id="derived-hint" class="derived-hint">Derived values appear when dimensions are filled.</p>
+
+            <p class="form-section-title">Material</p>
+            <div class="form-grid">
+              <div class="field"><label for="G">Shear modulus G <span>N/mm²</span></label><input type="number" id="G" placeholder="0.9" step="any" /></div>
+            </div>
+
+            <p class="form-section-title">Vertical forces</p>
+            <div class="form-grid cols-3">
+              <div class="field"><label for="Vmax">Vmax <span>kN</span></label><input type="number" id="Vmax" placeholder="1420" step="any" /></div>
+              <div class="field"><label for="Vdl">Vdl <span>kN</span></label><input type="number" id="Vdl" placeholder="384" step="any" /></div>
+              <div class="field"><label for="Vll">Vll <span>kN</span></label><input type="number" id="Vll" placeholder="1036" step="any" /></div>
+            </div>
+
+            <p class="form-section-title">Horizontal forces &amp; movements</p>
+            <div class="form-grid">
+              <div class="field"><label for="Hs">Hs (longitudinal) <span>kN</span></label><input type="number" id="Hs" placeholder="50" step="any" /></div>
+              <div class="field"><label for="Ht">Ht (transverse) <span>kN</span></label><input type="number" id="Ht" placeholder="10" step="any" /></div>
+              <div class="field"><label for="long_mvmt">Long. movement <span>mm</span></label><input type="number" id="long_mvmt" placeholder="10.6" step="any" /></div>
+              <div class="field"><label for="trans_mvmt">Trans. movement <span>mm</span></label><input type="number" id="trans_mvmt" placeholder="4.19" step="any" /></div>
+            </div>
+
+            <p class="form-section-title">Rotations</p>
+            <div class="form-grid">
+              <div class="field"><label for="alpha_b">αb <span>rad</span></label><input type="number" id="alpha_b" placeholder="0.0001" step="any" /></div>
+              <div class="field"><label for="alpha_l">αl <span>rad</span></label><input type="number" id="alpha_l" placeholder="0" step="any" /></div>
+            </div>
+          </div>
+
+          <div id="tab-sample" class="tab-panel" role="tabpanel">
+            <div class="info-box">
+              Official verification case from the Naidu brief and Freyssinet spreadsheet.
+              Expected: <strong>BEARING FAILS</strong> — checks 1, 2, and 5 fail.
+            </div>
+            <table class="verify-table">
+              <thead><tr><th>Check</th><th>Spreadsheet</th><th>Expected</th></tr></thead>
+              <tbody>
+                <tr><td>Inputs</td><td>457×254×54 mm, G=0.9</td><td>—</td></tr>
+                <tr><td>1 – Shear strain</td><td>Eq ≈ 0.80</td><td class="fail-cell">FAIL</td></tr>
+                <tr><td>2 – Max design strain</td><td>Et ≈ 5.43</td><td class="fail-cell">FAIL</td></tr>
+                <tr><td>3 – Plate thickness</td><td>—</td><td>OK</td></tr>
+                <tr><td>4 – Stability</td><td>—</td><td>OK</td></tr>
+                <tr><td>5 – Vertical deflection</td><td>▲ ≈ 1.59 mm</td><td class="fail-cell">FAIL</td></tr>
+                <tr><td>6 – Rotational limit</td><td>—</td><td>OK</td></tr>
+                <tr><td>7 – Fixing</td><td>—</td><td>OK</td></tr>
+                <tr><td><strong>Overall</strong></td><td>—</td><td class="fail-cell">BEARING FAILS</td></tr>
+              </tbody>
+            </table>
+            <div class="btn-row">
+              <button type="button" class="btn btn-primary" onclick="loadSample()">
+                <span class="btn-label">Load &amp; run sample</span>
+                <div class="spinner"></div>
+              </button>
+            </div>
+          </div>
+
+          <div id="tab-json" class="tab-panel" role="tabpanel">
+            <div class="info-box">
+              Paste all 17 parameters as JSON (see <code>sample_input.json</code> in the repository).
+            </div>
+            <div class="field">
+              <label for="json-input">JSON input</label>
+              <textarea id="json-input" placeholder='{"l": 457, "b": 254, ...}'></textarea>
+            </div>
+            <div class="btn-row">
+              <button type="button" class="btn btn-primary" onclick="runFromJson()">Run from JSON</button>
+            </div>
+          </div>
+
+          <div id="action-row" class="btn-row">
+            <button type="button" class="btn btn-primary" id="run-btn" onclick="runChecks()">
+              <span class="btn-label">Run all checks</span>
+              <div class="spinner"></div>
+            </button>
+            <button type="button" class="btn btn-outline" onclick="clearForm()">Clear</button>
+            <button type="button" class="btn btn-ghost" onclick="loadSampleIntoForm(); switchTab('manual')">Fill sample</button>
+          </div>
+
+          <div class="progress-bar" id="progress-bar" aria-hidden="true">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="results-panel" aria-labelledby="results-heading">
+      <div class="card">
+        <div class="card-header">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+          <h2 id="results-heading">Design check results</h2>
+        </div>
+        <div class="card-body" id="results-body">
+          <div class="placeholder" id="placeholder">
+            <div class="placeholder-icon">⚙</div>
+            <div class="placeholder-text">No results yet</div>
+            <div class="placeholder-sub">Enter parameters and click Run all checks (Ctrl+Enter)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  Naidu Consulting · Freyssinet design manual logic · Results must be verified by a qualified structural engineer.
+</footer>
+
+<script src="/static/js/app.js" defer></script>
+</body>
+</html>

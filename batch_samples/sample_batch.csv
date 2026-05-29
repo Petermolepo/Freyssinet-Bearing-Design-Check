@@ -1,0 +1,5 @@
+label,l,b,T,plate_thk,no_plates,te,ti,G,Vmax,Vdl,Vll,Hs,Ht,long_mvmt,trans_mvmt,alpha_b,alpha_l
+Sample_Verification,457,254,54,4.5,4,10,10,0.9,1420,384,1036,50,10,10.6,4.19,0.0001,0
+Larger_Bearing,600,350,70,5.0,5,12,12,0.9,2000,600,1400,60,15,8.0,3.0,0.0001,0
+Small_Lightly_Loaded,300,200,40,4.0,4,8,8,0.7,500,150,350,20,5,5.0,2.0,0.00005,0
+Overloaded_Bearing,300,200,40,3.0,3,8,8,0.9,2500,800,1700,100,30,20.0,8.0,0.0002,0.0001

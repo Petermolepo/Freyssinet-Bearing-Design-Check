@@ -1,0 +1,18 @@
+# ─────────────────────────────────────────────────────────────
+# Freyssinet Bearing Design Check Tool – Python dependencies
+# ─────────────────────────────────────────────────────────────
+#
+# CORE (always needed)
+pytest>=7.0          # Test runner — run: pytest tests/ -v
+#
+# PDF EXPORT  (needed for --export-pdf and /api/check/pdf)
+reportlab>=4.0
+#
+# WEB UI  (needed for --web and /api/check endpoints)
+fastapi>=0.110
+uvicorn>=0.27
+#
+# ─────────────────────────────────────────────────────────────
+# Install all at once:
+#   pip install -r requirements.txt
+# ─────────────────────────────────────────────────────────────

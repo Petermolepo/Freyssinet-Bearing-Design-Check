@@ -1,0 +1,133 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+
+  # ── Stage 1: Lint ──────────────────────────────────────────────────────────
+  lint:
+    name: "Stage 1 · Lint"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install pyflakes
+      - name: Lint all Python files
+        run: |
+          python -m pyflakes main.py models.py validators.py engine.py \
+            outputs.py compare.py batch.py
+          python -m pyflakes checks/
+          python -m pyflakes export/
+          python -m pyflakes bearing_types/
+          python -m pyflakes tests/
+          python -m pyflakes web/app.py
+
+  # ── Stage 2: Tests across 4 Python versions ───────────────────────────────
+  test:
+    name: "Stage 2 · Tests (Python ${{ matrix.python-version }})"
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "${{ matrix.python-version }}" }
+      - run: pip install -r requirements.txt
+      - run: python -m pytest tests/ -v --tb=short
+
+  # ── Stage 3: Verify sample input matches brief exactly ────────────────────
+  verify:
+    name: "Stage 3 · Verification (sample input)"
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install -r requirements.txt
+      - name: Run sample — verbose output
+        run: python main.py --sample --verbose
+      - name: Assert BEARING FAILS
+        run: |
+          OVERALL=$(python main.py --sample --json | python3 -c "import sys,json; print(json.load(sys.stdin)['overall'])")
+          echo "Overall: $OVERALL"
+          test "$OVERALL" = "BEARING FAILS"
+      - name: Assert Check 1 FAIL Eq≈0.80
+        run: |
+          python3 -c "
+          import json,subprocess,sys
+          d=json.loads(subprocess.check_output(['python3','main.py','--sample','--json']))
+          c=d['check1_shear_strain']
+          assert c['status']=='FAIL', f'Expected FAIL got {c[\"status\"]}'
+          assert abs(c['Eq']-0.80)<0.02, f'Eq expected 0.80 got {c[\"Eq\"]}'
+          print('Check 1 FAIL Eq=',round(c['Eq'],4),'✓')
+          "
+      - name: Assert Check 2 FAIL Et≈5.43
+        run: |
+          python3 -c "
+          import json,subprocess
+          d=json.loads(subprocess.check_output(['python3','main.py','--sample','--json']))
+          c=d['check2_max_design_strain']
+          assert c['status']=='FAIL'
+          assert abs(c['Et']-5.43)<0.05, f'Et expected 5.43 got {c[\"Et\"]}'
+          print('Check 2 FAIL Et=',round(c['Et'],4),'✓')
+          "
+      - name: Assert Checks 3,4,6,7 OK
+        run: |
+          python3 -c "
+          import json,subprocess
+          d=json.loads(subprocess.check_output(['python3','main.py','--sample','--json']))
+          for k in ['check3_plate_thickness','check4_stability','check6_rotational_limit','check7_fixing_of_bearings']:
+              assert d[k]['status']=='OK', f'{k} expected OK got {d[k][\"status\"]}'
+              print(k,'OK ✓')
+          "
+      - name: Assert Check 5 FAIL ▲Total≈1.59
+        run: |
+          python3 -c "
+          import json,subprocess
+          d=json.loads(subprocess.check_output(['python3','main.py','--sample','--json']))
+          c=d['check5_vertical_deflection']
+          assert c['status']=='FAIL'
+          assert abs(c['delta_total']-1.59)<0.02, f'delta_total expected 1.59 got {c[\"delta_total\"]}'
+          print('Check 5 FAIL delta_total=',round(c['delta_total'],4),'✓')
+          "
+
+  # ── Stage 4: Features smoke test ──────────────────────────────────────────
+  features:
+    name: "Stage 4 · Features smoke test"
+    runs-on: ubuntu-latest
+    needs: verify
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install -r requirements.txt
+      - name: JSON output valid
+        run: python main.py --sample --json | python3 -m json.tool > /dev/null
+      - name: --input flag works
+        run: python main.py --input sample_input.json
+      - name: --explain flag works
+        run: python main.py --explain
+      - name: --types flag works
+        run: python main.py --types
+      - name: batch mode works
+        run: python main.py --batch batch_samples/sample_batch.csv
+      - name: PDF export works
+        run: |
+          python main.py --sample --export-pdf /tmp/test_report.pdf
+          test -f /tmp/test_report.pdf && echo "PDF created ✓"
+      - name: CSV export works
+        run: |
+          python main.py --sample --export-csv /tmp/test_report.csv
+          test -f /tmp/test_report.csv && echo "CSV created ✓"
+      - name: Bad input exits non-zero
+        run: |
+          echo '{"l":-1}' > /tmp/bad.json
+          python main.py --input /tmp/bad.json && exit 1 || echo "Bad input rejected ✓"
