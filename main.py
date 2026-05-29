@@ -37,7 +37,7 @@ from engine import run_checks
 from outputs import format_table, format_full, format_json, format_explain
 from compare import format_comparison
 from batch import run_batch, format_batch_summary
-from bearing_types.registry import get_bearing_type, list_bearing_types, PAD_BEARING
+from bearing_types.registry import get_bearing_type, list_bearing_types
 
 
 # ── Sample input (official verification case) ───────────────────────────────

@@ -6,7 +6,6 @@ Accepts an optional BearingType to support multiple bearing types.
 """
 
 from dataclasses import dataclass
-from typing import Optional, Any
 
 from models import BearingInput
 from checks.geometry import compute_geometry
