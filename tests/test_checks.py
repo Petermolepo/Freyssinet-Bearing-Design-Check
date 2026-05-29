@@ -13,8 +13,6 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-import pytest
-
 from models import BearingInput
 from validators import validate
 from engine import run_checks

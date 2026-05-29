@@ -18,8 +18,8 @@ To add a new type:
   3. Pass --type <name> on the CLI.
 """
 
-from dataclasses import dataclass, field
-from typing import Dict, Any, Optional
+from dataclasses import dataclass
+from typing import Dict, Any
 
 
 @dataclass

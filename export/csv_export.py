@@ -58,12 +58,12 @@ def _build_report_rows(
     # ── Cover ─────────────────────────────────────────────────────────────
     rows.append([REPORT_TITLE])
     rows.append([ORGANISATION])
-    rows.append([f"Generated", ts])
+    rows.append(["Generated", ts])
     if label:
-        rows.append([f"Bearing label", label])
-    rows.append([f"Bearing size", size])
-    rows.append([f"Bearing type", result.bearing_type or bearing_type_code])
-    rows.append([f"Overall result", result.overall])
+        rows.append(["Bearing label", label])
+    rows.append(["Bearing size", size])
+    rows.append(["Bearing type", result.bearing_type or bearing_type_code])
+    rows.append(["Overall result", result.overall])
     rows.append(_blank_row())
 
     # ── 1. Input parameters ───────────────────────────────────────────────
@@ -284,7 +284,7 @@ def export_csv_batch(
     rows: List[List[str]] = [
         [REPORT_TITLE, "Batch summary"],
         [ORGANISATION],
-        [f"Generated", datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
+        ["Generated", datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
         _blank_row(),
         _section_title("BATCH COMPARISON"),
         [
