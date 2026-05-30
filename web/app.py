@@ -38,6 +38,8 @@ app = FastAPI(
 )
 
 _STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
+_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+_PRESENTATION_HTML = os.path.join(_PROJECT_ROOT, "presentation", "index.html")
 app.mount("/static", StaticFiles(directory=_STATIC_DIR), name="static")
 
 
@@ -206,7 +208,10 @@ def root():
 @app.get("/presentation", response_class=HTMLResponse)
 def presentation():
     """Assessment presentation deck (open in browser for interview prep)."""
-    path = os.path.join(os.path.dirname(_STATIC_DIR), "..", "presentation", "index.html")
-    path = os.path.normpath(path)
-    with open(path, encoding="utf-8") as f:
+    if not os.path.isfile(_PRESENTATION_HTML):
+        raise HTTPException(
+            status_code=404,
+            detail=f"Presentation not found at {_PRESENTATION_HTML}",
+        )
+    with open(_PRESENTATION_HTML, encoding="utf-8") as f:
         return f.read()
