@@ -137,7 +137,9 @@ def _run_and_print(raw: dict, args, bt=None) -> int:
         print(format_table(result))
 
     _maybe_export(inp, result, args)
-    return 0 if result.overall == "BEARING PASSES" else 1
+    # Exit 0 when calculation completed (PASS or FAIL). Use overall in JSON/output.
+    # Exit 1 is reserved for input/validation errors (see validate() above).
+    return 0
 
 
 def _interactive_mode(args, bt) -> int:
@@ -175,11 +177,8 @@ def _batch_mode(args, bt) -> int:
         except Exception as e:
             print(f"  ✗  CSV export failed: {e}")
 
-    any_fail = any(
-        (not errs and res.overall != "BEARING PASSES")
-        for _, inp, res, errs in results
-    )
-    return 1 if any_fail else 0
+    # Exit 0 when batch ran; pass/fail counts are in the printed summary.
+    return 0
 
 
 def _compare_mode(args, bt) -> int:
@@ -308,7 +307,8 @@ def main():
         return _start_web(args)
 
     if args.sample:
-        print("\n  [Running with verification sample input]\n")
+        if not args.json:
+            print("\n  [Running with verification sample input]\n")
         return _run_and_print(SAMPLE_INPUT, args, bt)
 
     if args.input:

@@ -114,11 +114,15 @@ def format_full(result: BearingResult) -> str:
 def format_json(result: BearingResult) -> str:
     """Serialise result to JSON."""
     def _chk_dict(chk):
-        return {
+        d = {
             "status": chk.status,
             "intermediates": chk.intermediates,
             "message": chk.message,
         }
+        for attr in ("Eq", "Et", "tmin", "delta_total", "rot_limit"):
+            if hasattr(chk, attr):
+                d[attr] = getattr(chk, attr)
+        return d
 
     payload = {
         "check1_shear_strain":        _chk_dict(result.check1),
