@@ -110,6 +110,13 @@ python main.py --web
 
 If port 8000 is busy: `python main.py --web --port 8001`
 
+### Presentation deck (interview prep)
+With the web UI running, open:
+
+**http://localhost:8000/presentation**
+
+Use **← →** arrow keys to navigate 12 slides. Slide 3 highlights *“explain your code”*; Slide 4 shows the core pipeline architecture.
+
 ### Run all tests (50 tests)
 ```bash
 pytest tests/ -v

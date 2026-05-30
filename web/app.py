@@ -201,3 +201,12 @@ def root():
     index = os.path.join(_STATIC_DIR, "index.html")
     with open(index, encoding="utf-8") as f:
         return f.read()
+
+
+@app.get("/presentation", response_class=HTMLResponse)
+def presentation():
+    """Assessment presentation deck (open in browser for interview prep)."""
+    path = os.path.join(os.path.dirname(_STATIC_DIR), "..", "presentation", "index.html")
+    path = os.path.normpath(path)
+    with open(path, encoding="utf-8") as f:
+        return f.read()
