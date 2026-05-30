@@ -5,14 +5,15 @@ on:
     branches: ["**"]
   pull_request:
     branches: ["**"]
+  workflow_dispatch:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   PYTHONIOENCODING: utf-8
+  PYTHONUTF8: "1"
 
 jobs:
 
-  # ── Stage 1: Lint ──────────────────────────────────────────────────────────
   lint:
     name: "Stage 1 · Lint"
     runs-on: ubuntu-latest
@@ -33,12 +34,12 @@ jobs:
           python -m pyflakes web/app.py
           python -m pyflakes scripts/
 
-  # ── Stage 2: Tests across 4 Python versions ───────────────────────────────
   test:
     name: "Stage 2 · Tests (Python ${{ matrix.python-version }})"
     runs-on: ubuntu-latest
     needs: lint
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12"]
     steps:
@@ -49,7 +50,6 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python -m pytest tests/ -v --tb=short
 
-  # ── Stage 3: Verify sample input matches brief / spreadsheet ──────────────
   verify:
     name: "Stage 3 · Verification (sample input)"
     runs-on: ubuntu-latest
@@ -60,10 +60,9 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install -r requirements.txt
-      - name: Verify sample (verbose output + JSON assertions)
+      - name: Verify sample (pytest — brief / spreadsheet)
         run: python scripts/verify_sample.py
 
-  # ── Stage 4: Features smoke test ──────────────────────────────────────────
   features:
     name: "Stage 4 · Features smoke test"
     runs-on: ubuntu-latest
