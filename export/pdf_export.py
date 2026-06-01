@@ -1,7 +1,9 @@
 """
-export/pdf_export.py
-====================
-Professional PDF report with Naidu branding, logo, and structured sections.
+export/pdf_export.py — Branded PDF report
+=========================================
+Builds an A4 PDF: verdict banner, summary table, inputs, geometry,
+then detailed intermediates for all 7 checks. Naidu green styling.
+Main function: export_pdf(inp, result, output_path).
 """
 
 import os

@@ -1,8 +1,9 @@
 """
-engine.py
-=========
-Orchestrates all 7 design checks.
-Accepts an optional BearingType to support multiple bearing types.
+engine.py — Calculation orchestrator
+====================================
+Runs geometry once, then checks 1→7 in the correct order.
+Returns one BearingResult with pass/fail per check and overall verdict.
+This is the single entry point for “run the full design check”.
 """
 
 from dataclasses import dataclass
@@ -20,6 +21,7 @@ from checks.check7_fixing import check7_fixing, Check7Result
 
 @dataclass
 class BearingResult:
+    """Full outcome: seven check results plus BEARING PASSES / BEARING FAILS."""
     check1: Check1Result
     check2: Check2Result
     check3: Check3Result

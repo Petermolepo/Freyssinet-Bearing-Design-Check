@@ -48,9 +48,9 @@ SAMPLE = BearingInput(
 
 class TestSampleVerification:
     """
-    These tests are the ground truth. Every value is taken directly
-    from the brief's Verification section. If any of these fail, the
-    engine is wrong — do not change the assertions, fix the engine.
+  PRESENTATION: “Does the tool match the official example?”
+  Sample must FAIL overall; checks 1, 2, 5 fail; others pass.
+  Eq ≈ 0.80, Et ≈ 5.43, ▲Total ≈ 1.59 — from the assessment brief.
     """
 
     def test_overall_result_is_bearing_fails(self):
@@ -117,6 +117,7 @@ class TestSampleVerification:
 # ══════════════════════════════════════════════════════════════════════════════
 
 class TestGeometry:
+    """Unit tests for le, be, tq, S, and δr before any check runs."""
 
     def test_le_be_reduced_by_10(self):
         g = compute_geometry(SAMPLE)
@@ -153,6 +154,7 @@ class TestGeometry:
 # ══════════════════════════════════════════════════════════════════════════════
 
 class TestCheck1:
+    """Shear strain Eq — pass below 0.7, fail at or above."""
 
     def test_passes_when_eq_below_0_7(self):
         # delta_r = 21, tq = 36 → Eq = 0.583 < 0.7 → OK
@@ -183,6 +185,7 @@ class TestCheck1:
 # ══════════════════════════════════════════════════════════════════════════════
 
 class TestCheck2:
+    """Maximum design strain Et and load factor k."""
 
     def _sample_args(self, **overrides):
         g = compute_geometry(SAMPLE)
@@ -216,6 +219,7 @@ class TestCheck2:
 # ══════════════════════════════════════════════════════════════════════════════
 
 class TestCheck3:
+    """Steel plate thickness tmin vs supplied plate."""
 
     def test_sample_passes(self):
         g = compute_geometry(SAMPLE)
@@ -246,6 +250,7 @@ class TestCheck3:
 # ══════════════════════════════════════════════════════════════════════════════
 
 class TestCheck4:
+    """Stability: stress limit and Σti < be/4."""
 
     def test_sample_passes(self):
         g = compute_geometry(SAMPLE)
@@ -270,6 +275,7 @@ class TestCheck4:
 # ══════════════════════════════════════════════════════════════════════════════
 
 class TestCheck5:
+    """Vertical deflection ▲Total vs 0.15·ti."""
 
     def test_sample_fails(self):
         g = compute_geometry(SAMPLE)
@@ -299,6 +305,7 @@ class TestCheck5:
 # ══════════════════════════════════════════════════════════════════════════════
 
 class TestCheck6:
+    """Rotational limit — ▲Total must exceed rot_limit."""
 
     def test_sample_passes(self):
         g = compute_geometry(SAMPLE)
@@ -319,6 +326,7 @@ class TestCheck6:
 # ══════════════════════════════════════════════════════════════════════════════
 
 class TestCheck7:
+    """Fixing: horizontal H and permanent load stress."""
 
     def test_sample_passes(self):
         g = compute_geometry(SAMPLE)
@@ -343,6 +351,7 @@ class TestCheck7:
 # ══════════════════════════════════════════════════════════════════════════════
 
 class TestValidation:
+    """validators.py — bad inputs must return clear error messages."""
 
     def _valid(self):
         return dict(

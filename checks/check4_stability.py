@@ -1,6 +1,7 @@
 """
-Check 4 – Stability
-====================
+Check 4 — Stability (“Will the bearing buckle or squash?”)
+=========================================================
+Two rules: vertical stress V/A1 below limit, and Σti < be/4.  Both must pass.
 Spreadsheet cells:
   D88  = V/A1    = Vmax*1000 / A1              (stress check)
   F90  = (2*be*G*S') / (3*sum_ti)             (stability limit)
@@ -18,6 +19,7 @@ from typing import Dict, Any
 
 @dataclass
 class Check4Result:
+    """Result for Check 4: stress and geometry sub-checks."""
     status: str
     intermediates: Dict[str, Any]
     message: str

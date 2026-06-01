@@ -1,8 +1,9 @@
 """
-validators.py
-=============
-Validates a raw dict (from CLI / JSON) before constructing BearingInput.
-Returns a list of error strings. Empty list means input is clean.
+validators.py — Input gatekeeper
+================================
+Runs before any calculation. Catches missing fields, bad types,
+negative sizes, and impossible combinations (e.g. Vdl > Vmax).
+Empty error list = safe to build BearingInput and call the engine.
 """
 
 from typing import Any, Dict, List

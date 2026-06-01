@@ -1,8 +1,9 @@
 """
-compare.py
-==========
-Side-by-side comparison of two bearing designs.
-Highlights which bearing wins on each check and overall.
+compare.py — Two designs side by side
+=====================================
+Loads two JSON input files, runs both through the engine,
+shows which design passes each check (A vs B).
+Used by: python main.py --compare design_a.json design_b.json
 """
 
 import sys
@@ -35,6 +36,7 @@ def format_comparison(
     inp_a: BearingInput, res_a: BearingResult, label_a: str,
     inp_b: BearingInput, res_b: BearingResult, label_b: str,
 ) -> str:
+    """Build the side-by-side text table for --compare mode."""
 
     checks_a = [res_a.check1, res_a.check2, res_a.check3, res_a.check4,
                 res_a.check5, res_a.check6, res_a.check7]

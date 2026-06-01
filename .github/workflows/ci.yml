@@ -1,3 +1,4 @@
+# GitHub Actions — 4 stages: lint → full tests → verification sample → feature smoke
 name: CI
 
 on:

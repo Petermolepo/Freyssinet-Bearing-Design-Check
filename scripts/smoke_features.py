@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
-CI Stage 4 — CLI features and exports (in-process where possible).
+scripts/smoke_features.py — CI Stage 4
+======================================
+Quick test that batch, PDF/CSV export, JSON, and CLI exit codes all work.
+Run manually: python scripts/smoke_features.py
 """
 
 import json

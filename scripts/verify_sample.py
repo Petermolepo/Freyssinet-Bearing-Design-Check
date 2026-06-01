@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-CI Stage 3 — verification sample (Naidu brief / Freyssinet spreadsheet).
-
-Runs the same pytest class used in Stage 2, in-process (no subprocess shell).
+scripts/verify_sample.py — CI Stage 3
+=====================================
+Runs only TestSampleVerification — proves the tool matches the assessment brief.
+Run manually: python scripts/verify_sample.py
 """
 
 import sys

@@ -1,6 +1,7 @@
 """
-Check 1 – Shear Strain
-======================
+Check 1 — Shear strain (presentation: “Is the rubber shearing too much?”)
+=========================================================================
+Formula: Eq = δr / tq.  PASS when Eq < 0.7 (spreadsheet limit).
 Spreadsheet cells:
   D44 = Eq = delta_r / tq       (F38 / D27)
   F44 = IF(D44 < 0.7, "OK!", "FAILS!")
@@ -18,6 +19,7 @@ from typing import Dict, Any
 
 @dataclass
 class Check1Result:
+    """Result for Check 1: Eq value, OK/FAIL, and intermediate displacements."""
     Eq: float
     status: str          # "OK" | "FAIL"
     intermediates: Dict[str, Any]

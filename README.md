@@ -3,6 +3,8 @@
 
 > **Candidate:** Peter Molepo | **Role:** Engineering Software Developer
 
+**Presenting?** See **[PROJECT_MAP.md](PROJECT_MAP.md)** for a folder-by-folder guide. Each subfolder has its own `README.md` with short explanations.
+
 ---
 
 ## What it does

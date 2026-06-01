@@ -1,10 +1,9 @@
 """
-outputs.py
-==========
-Formats BearingResult into:
-  - Plain-text table  (default)
-  - JSON              (--json flag)
-  - Explanation block (--explain flag)
+outputs.py — How results are shown to the user
+==============================================
+Turns BearingResult into readable text: summary table, full detail,
+JSON for APIs, or the formula sheet (--explain).
+No maths here — only formatting and colours.
 """
 
 import json
@@ -28,6 +27,7 @@ def _status_str(status: str) -> str:
 
 
 def format_table(result: BearingResult) -> str:
+    """Compact one-line-per-check table (default CLI output)."""
     checks = [
         ("1", "Shear Strain",          result.check1),
         ("2", "Max Design Strain",     result.check2),

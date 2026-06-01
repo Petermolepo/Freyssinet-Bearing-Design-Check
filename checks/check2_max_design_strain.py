@@ -1,6 +1,7 @@
 """
-Check 2 – Maximum Design Strain
-================================
+Check 2 — Maximum design strain (“Total strain under load + rotation”)
+====================================================================
+Combines compression Ec, shear Eq, and rotation Eα into Et.  PASS when Et < 5.
 Spreadsheet cells:
   D51 = A1  = Ae * (1 - (delta_b/be) - (delta_l/le))
   D52 = Ec  = 1.5 * Vmax*1000 / (G * A1 * S)
@@ -19,6 +20,7 @@ from typing import Dict, Any
 
 @dataclass
 class Check2Result:
+    """Result for Check 2: Et, OK/FAIL, and A1 / Ec / k intermediates."""
     Et: float
     status: str
     intermediates: Dict[str, Any]

@@ -1,6 +1,7 @@
 """
-Check 3 – Reinforcing Plate Thickness
-======================================
+Check 3 — Plate thickness (“Are the steel plates thick enough?”)
+================================================================
+Computes minimum required thickness tmin.  PASS when tmin ≤ actual plate_thk.
 Spreadsheet cells (verified against brief pass condition):
   t1        = te  (edge rubber layer thickness, mm)
   t2        = ti  (internal rubber layer thickness, mm)
@@ -17,6 +18,7 @@ SIGMA_S = 290.0   # N/mm² – steel yield stress (hardcoded in spreadsheet)
 
 @dataclass
 class Check3Result:
+    """Result for Check 3: required tmin vs supplied plate thickness."""
     tmin: float
     status: str
     intermediates: Dict[str, Any]

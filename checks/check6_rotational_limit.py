@@ -1,6 +1,7 @@
 """
-Check 6 – Rotational Limit
-============================
+Check 6 — Rotational limit (“Is there enough sag to absorb rotation?”)
+======================================================================
+PASS when ▲Total > (be·αb + le·αl)/3 — deflection must exceed rotation demand.
 Spreadsheet cells:
   D112 = ▲ = delta_total (same value as F103 from Check 5)
   F114 = (be*alpha_b + le*alpha_l) / 3
@@ -23,6 +24,7 @@ from typing import Dict, Any
 
 @dataclass
 class Check6Result:
+    """Result for Check 6: compares Check 5 ▲Total to rotational limit."""
     delta_total: float
     rot_limit: float
     status: str

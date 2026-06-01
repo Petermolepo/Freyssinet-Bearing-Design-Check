@@ -1,6 +1,9 @@
 """
-BearingInput – the single data model for all 15 input parameters.
-All units are as specified in the brief (mm, kN, N/mm², radians).
+models.py — Input data container
+================================
+One class holds every number the engineer types in (15 fields).
+Used by CLI, web API, batch CSV, and all checks.
+Units: mm, kN, N/mm², radians (same as the Freyssinet spreadsheet).
 """
 
 from dataclasses import dataclass
@@ -8,6 +11,10 @@ from dataclasses import dataclass
 
 @dataclass
 class BearingInput:
+    """
+    All bearing inputs in one place.
+    The engine never reads raw dicts — it always uses this class.
+    """
     # --- Bearing dimensions ---
     l: float           # Bearing length (mm)
     b: float           # Bearing width (mm)

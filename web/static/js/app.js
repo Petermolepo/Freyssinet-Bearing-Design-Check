@@ -1,8 +1,12 @@
 /**
- * Freyssinet Bearing Design Check — Web UI
- * Naidu Consulting technical assessment tool
+ * web/static/js/app.js — Front-end logic
+ * ======================================
+ * - Collects form fields and POSTs to /api/check
+ * - Renders pass/fail cards and geometry panel
+ * - PDF/CSV download via /api/check/pdf and /api/check/csv
  */
 
+// Official verification sample (same as main.py SAMPLE_INPUT)
 const SAMPLE = {
   l: 457, b: 254, T: 54, plate_thk: 4.5, no_plates: 4,
   te: 10, ti: 10, G: 0.9,
@@ -18,6 +22,7 @@ const FIELD_IDS = [
   'alpha_b', 'alpha_l',
 ];
 
+// Maps API JSON keys to display labels for the 7 checks
 const CHECK_META = [
   { key: 'check1_shear_strain', num: 1, name: 'Shear Strain', keyField: 'Eq' },
   { key: 'check2_max_design_strain', num: 2, name: 'Max Design Strain', keyField: 'Et' },
@@ -100,6 +105,7 @@ function loadSampleIntoForm() {
   showToast('Verification sample loaded (Naidu brief / spreadsheet).');
 }
 
+/** Fill form with SAMPLE and run checks immediately (Quick verify button). */
 function loadSample() {
   loadSampleIntoForm();
   switchTab('manual');
@@ -141,12 +147,14 @@ function clearForm() {
   updateDerivedHint();
 }
 
+/** Main action: read form → POST /api/check → render results panel. */
 function runChecks() {
   const data = collectForm();
   if (!data) return;
   callApi(data);
 }
 
+/** POST JSON to backend; handles validation errors and network failures. */
 async function callApi(data) {
   const btn = document.getElementById('run-btn');
   const bar = document.getElementById('progress-bar');
@@ -226,6 +234,7 @@ function renderGeometry(geo) {
     </div>`;
 }
 
+/** Build the 7 check cards, overall verdict, and expandable detail rows. */
 function renderResults(result, inputData) {
   const body = document.getElementById('results-body');
   const isPass = result.overall === 'BEARING PASSES';

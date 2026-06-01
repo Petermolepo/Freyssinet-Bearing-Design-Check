@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
-main.py – Freyssinet Elastomeric Bearing Design Check Tool
-==========================================================
+main.py — Command-line entry point (start here for demos)
+=========================================================
+Parses flags, loads input (sample / JSON / interactive / batch),
+calls validate → engine → outputs. Also starts the web UI.
 
 QUICK REFERENCE
 ───────────────
@@ -40,7 +42,7 @@ from batch import run_batch, format_batch_summary
 from bearing_types.registry import get_bearing_type, list_bearing_types
 
 
-# ── Sample input (official verification case) ───────────────────────────────
+# Official verification case from the assessment brief (Checks 1,2,5 fail).
 SAMPLE_INPUT = {
     "l": 457, "b": 254, "T": 54,
     "plate_thk": 4.5, "no_plates": 4,
@@ -74,6 +76,7 @@ PROMPTS = [
 
 
 def _build_input(raw: dict) -> BearingInput:
+    """Convert a plain dict (JSON/CLI) into a typed BearingInput."""
     return BearingInput(
         l=float(raw["l"]), b=float(raw["b"]), T=float(raw["T"]),
         plate_thk=float(raw["plate_thk"]), no_plates=int(raw["no_plates"]),
@@ -87,6 +90,7 @@ def _build_input(raw: dict) -> BearingInput:
 
 
 def _load_json(path: str) -> dict:
+    """Read bearing parameters from a JSON file."""
     try:
         with open(path) as f:
             return json.load(f)
@@ -118,6 +122,7 @@ def _maybe_export(inp, result, args):
 
 
 def _run_and_print(raw: dict, args, bt=None) -> int:
+    """Validate → run_checks → print table/JSON/verbose; optional export."""
     errors = validate(raw)
     if errors:
         print("\n[INPUT ERRORS]")
@@ -143,6 +148,7 @@ def _run_and_print(raw: dict, args, bt=None) -> int:
 
 
 def _interactive_mode(args, bt) -> int:
+    """Prompt the user for each of the 15 input fields."""
     print("\n  Freyssinet Bearing Design Check – Interactive Mode")
     print("  Enter each parameter value when prompted.\n")
     raw = {}
@@ -159,6 +165,7 @@ def _interactive_mode(args, bt) -> int:
 
 
 def _batch_mode(args, bt) -> int:
+    """Process every row in a CSV file and print the summary grid."""
     try:
         results = run_batch(args.batch, bt)
     except (ValueError, FileNotFoundError) as e:
@@ -182,6 +189,7 @@ def _batch_mode(args, bt) -> int:
 
 
 def _compare_mode(args, bt) -> int:
+    """Run two JSON designs and print the side-by-side comparison."""
     raw_a = _load_json(args.compare[0])
     raw_b = _load_json(args.compare[1])
 
@@ -212,6 +220,7 @@ def _compare_mode(args, bt) -> int:
 
 
 def _start_web(args) -> int:
+    """Launch FastAPI + uvicorn for the browser UI."""
     try:
         import uvicorn
         from web.app import app
@@ -236,6 +245,7 @@ def _start_web(args) -> int:
 
 
 def main():
+    """Parse CLI arguments and dispatch to the chosen mode."""
     parser = argparse.ArgumentParser(
         description="Freyssinet Elastomeric Bearing Design Check Tool",
         formatter_class=argparse.RawDescriptionHelpFormatter,

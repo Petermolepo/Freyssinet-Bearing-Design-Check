@@ -25,7 +25,8 @@ from typing import Dict, Any
 @dataclass
 class BearingType:
     """
-    Encapsulates the constants and threshold overrides for a bearing type.
+    One bearing product line (pad / laminated / pot).
+    Holds limits and material constants the engine passes into checks.
 
     Attributes
     ----------

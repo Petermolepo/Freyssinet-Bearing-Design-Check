@@ -1,6 +1,8 @@
 """
-Check 7 – Fixing of Bearings
-==============================
+Check 7 — Fixing of bearings (“Anchorage and minimum permanent stress”)
+=====================================================================
+(a) Horizontal force H must stay below 0.1(V+2A1).
+(b) Dead-load stress Vdl/A1 must exceed 2 N/mm².  Both required.
 Two sub-checks:
 
 a) Under all loading (D147, F149, D151):
@@ -21,6 +23,7 @@ from typing import Dict, Any
 
 @dataclass
 class Check7Result:
+    """Result for Check 7: sub-checks a (shear H) and b (permanent load)."""
     status: str
     intermediates: Dict[str, Any]
     message: str

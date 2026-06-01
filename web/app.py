@@ -1,7 +1,8 @@
 """
-web/app.py
-==========
-FastAPI backend for the Freyssinet Bearing Design Check Tool.
+web/app.py — Browser UI + REST API
+==================================
+FastAPI serves the HTML form and JSON/PDF/CSV endpoints.
+Same pipeline as CLI: validate → BearingInput → run_checks → response.
 
 Endpoints:
   GET  /                      → Web UI (index.html)
@@ -44,6 +45,7 @@ app.mount("/static", StaticFiles(directory=_STATIC_DIR), name="static")
 
 
 class BearingRequest(BaseModel):
+    """JSON body from the web form — mirrors BearingInput plus bearing_type."""
     l: float = Field(..., gt=0, description="Bearing length (mm)")
     b: float = Field(..., gt=0, description="Bearing width (mm)")
     T: float = Field(..., gt=0, description="Total bearing height (mm)")
@@ -65,12 +67,14 @@ class BearingRequest(BaseModel):
 
 
 def _req_payload(req: BearingRequest) -> dict:
+    """Pydantic v1/v2 compatible dict export."""
     if hasattr(req, "model_dump"):
         return req.model_dump()
     return req.dict()
 
 
 def _build(req: BearingRequest) -> BearingInput:
+    """Strip bearing_type and build the core input model."""
     data = _req_payload(req)
     data.pop("bearing_type", None)
     return BearingInput(**data)
@@ -139,6 +143,7 @@ def _result_to_dict(result, geometry: dict, thresholds: dict) -> dict:
 
 
 def _run_validated(req: BearingRequest):
+    """Shared path for /api/check, PDF, and CSV — validate then run engine."""
     raw = {k: str(v) for k, v in _req_payload(req).items() if k != "bearing_type"}
     errors = validate(raw)
     if errors:
@@ -154,6 +159,7 @@ def _run_validated(req: BearingRequest):
 
 @app.get("/api/health")
 def health():
+    """Simple ping for monitoring / demos."""
     return {"status": "ok", "tool": "Freyssinet Bearing Design Check v1.0"}
 
 
@@ -200,6 +206,7 @@ def check_bearing_csv(req: BearingRequest):
 
 @app.get("/", response_class=HTMLResponse)
 def root():
+    """Serve the main design-check form (web/static/index.html)."""
     index = os.path.join(_STATIC_DIR, "index.html")
     with open(index, encoding="utf-8") as f:
         return f.read()

@@ -1,6 +1,9 @@
 """
-Pre-computed geometry values derived from raw inputs.
-Accepts cover_strip parameter so bearing types can override the default 5 mm.
+geometry.py — Shared derived values (run before Check 1)
+=========================================================
+Computes effective size (le, be), rubber thickness tq, movements δb/δl/δr,
+plan area Ae, and shape factor S. Every check uses these numbers.
+cover_strip: mm trimmed from each side of l and b (default 5, pad bearing).
 """
 
 import math
@@ -9,6 +12,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Geometry:
+    """All intermediate geometry from the spreadsheet (one object, easy to pass)."""
     le: float
     be: float
     no_layers: int
@@ -25,6 +29,7 @@ class Geometry:
 
 
 def compute_geometry(inp, cover_strip: float = 5.0) -> Geometry:
+    """Build Geometry from BearingInput. Called once at the start of run_checks()."""
     le = inp.l - 2 * cover_strip
     be = inp.b - 2 * cover_strip
     no_layers = inp.no_plates - 1

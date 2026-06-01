@@ -1,8 +1,8 @@
 """
-export/csv_export.py
-====================
-Professional multi-section CSV reports for bearing design checks.
-Structured for clarity in Excel: titled sections, labelled columns, grouped data.
+export/csv_export.py — Excel-friendly CSV reports
+=================================================
+Sectioned layout: cover, inputs, geometry, summary, then each check’s intermediates.
+Functions: export_csv_single (one bearing), export_csv_batch (comparison table).
 """
 
 import csv

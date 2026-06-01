@@ -1,11 +1,9 @@
 """
-batch.py
-========
-Run design checks on multiple bearings defined in a CSV file.
-
-CSV format: one row per bearing, column headers = input parameter names.
-An optional 'label' column provides a name for each bearing.
-Results are printed as a summary table and optionally exported.
+batch.py — Many bearings from one CSV
+=====================================
+Reads sample_batch.csv-style files (one row per bearing).
+Validates each row, runs the engine, prints a pass/fail grid.
+Used by: python main.py --batch <file.csv>
 """
 
 import csv

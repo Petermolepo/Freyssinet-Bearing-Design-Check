@@ -1,4 +1,7 @@
-/* Freyssinet Bearing Design Check — Naidu Consulting */
+/*
+ * web/static/css/styles.css — Naidu green theme and layout
+ * Sections: variables, header, form grid, results cards, tabs, responsive
+ */
 
 :root {
   --green: #8dc63f;

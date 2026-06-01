@@ -1,6 +1,7 @@
 """
-Check 5 – Vertical Deflection
-==============================
+Check 5 — Vertical deflection (“How much does the bearing squash?”)
+===================================================================
+Total sag ▲Total across all rubber layers.  PASS when ▲Total < 0.15 × ti.
 Spreadsheet cells:
   D99  = Eb = 2000 N/mm²  (bulk modulus, hardcoded)
   D101 = delta = ((Vmax*1000*ti) / (5*Ae*G*S^2))
@@ -20,6 +21,7 @@ EB_DEFAULT = 2000.0   # N/mm² – bulk modulus, hardcoded in spreadsheet D99
 
 @dataclass
 class Check5Result:
+    """Result for Check 5: total vertical movement ▲Total."""
     delta_total: float
     status: str
     intermediates: Dict[str, Any]
